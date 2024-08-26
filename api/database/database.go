@@ -1,4 +1,4 @@
-package config
+package database
 
 import (
 	"os"
@@ -36,7 +36,7 @@ func Close() {
 }
 
 func readConfig() (config *DBConfig) {
-	b, _ := os.ReadFile("config/database.yml")
+	b, _ := os.ReadFile("database/database.yml")
 	yaml.Unmarshal(b, &config)
 
 	return

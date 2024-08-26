@@ -5,7 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"gin_api/app/models"
+	"zzz_gacha/models"
 )
 
 func Index(c *gin.Context) {

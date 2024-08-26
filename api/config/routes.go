@@ -3,7 +3,7 @@ package config
 import (
 	"github.com/gin-gonic/gin"
 
-	"gin_api/app/controllers"
+	"zzz_gacha/controllers"
 )
 
 func SetRouting(e *gin.Engine) {

@@ -1,4 +1,4 @@
-module gin_api
+module zzz_gacha
 
 go 1.21.3
 

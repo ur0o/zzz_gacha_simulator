@@ -1,7 +1,7 @@
 protocol: tcp
 host: host.docker.internal
 port: 3306
-name: sample
+name: zzz_gacha
 user: root
 password: pass
 charset: utf8mb4

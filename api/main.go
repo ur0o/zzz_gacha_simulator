@@ -2,14 +2,16 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"gin_api/config"
+	"zzz_gacha/config"
+	"zzz_gacha/database"
 )
 
 func main() {
 	engine := gin.Default()
 
+	database.InitDB()
+
 	config.SetHeader(engine)
 	config.SetRouting(engine)
-	config.InitDB()
 	engine.Run(":8080")
 }
