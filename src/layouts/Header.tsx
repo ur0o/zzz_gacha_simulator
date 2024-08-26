@@ -14,6 +14,6 @@ export function Header() {
   `
 
   return <div css={HeaderStyle}>
-    <Link css={HeaderLinkStyle} to="/">Header</Link>
+    <Link css={HeaderLinkStyle} to="/">ゼンゼロガチャシミュレーター</Link>
   </div>
 }

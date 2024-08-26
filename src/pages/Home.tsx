@@ -3,24 +3,24 @@ import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import { useEffect, useState } from "react";
 
 type textResponse = {
-  text: string
+  name: string
 }
 
 export function Home() {
   const [text, setText] = useState("");
 
   useEffect(() => {
-    fetchText();
+    fetch();
   }, [])
 
-  function fetchText() {
+  function fetch() {
     const options: AxiosRequestConfig = {
       url: BaseUrl + "/",
       method: "GET"
     }
     axios(options).then((res: AxiosResponse<textResponse>) => {
       const { data } = res;
-      setText(data.text)
+      setText(data.name)
     })
   }
 
