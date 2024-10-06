@@ -8,7 +8,9 @@ import (
 
 func SetRouting(e *gin.Engine) {
 	indices := e.Group("/api")
+	gachas := indices.Group("/gacha")
 	{
-		indices.GET("/", controllers.Index)
+		gachas.GET("/:id", controllers.GetGacha)
+		gachas.GET("/:id/draw", controllers.DrawGacha)
 	}
 }

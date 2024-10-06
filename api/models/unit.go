@@ -1,7 +1,7 @@
 package models
 
 type Unit interface {
-	GetUnitInfo()
+	GetUnitInfo() UnitInfo
 }
 
 type UnitInfo map[string]string
