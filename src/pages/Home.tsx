@@ -1,9 +1,10 @@
 import { BaseUrl } from "../utils/api_config";
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-type textResponse = {
-  name: string
+type GachaResult = {
+  name: string,
+  rank: string,
 }
 
 export function Home() {
@@ -15,14 +16,45 @@ export function Home() {
 
   function fetch() {
     const options: AxiosRequestConfig = {
-      url: BaseUrl + "/",
-      method: "GET"
+      baseURL: BaseUrl,
+      url: `/gacha/1/draw`,
+      method: "get",
+      // params: gachastate
+      params: {
+        offsetS: 0,
+        offsetA: 0,
+        fixedS: false,
+        fixedA: false,
+        gacha_id: 1
+      }
     }
-    axios(options).then((res: AxiosResponse<textResponse>) => {
+    axios(options).then((res: AxiosResponse<GachaResult[]>) => {
       const { data } = res;
-      setText(data.name)
+      setResult(data)
+      setHistory(history.concat(result).slice(0, 90))
     })
   }
 
-  return <h2>{text}</h2>;
+  return <div>
+    <button onClick={fetch}>ガチャる</button>
+    {
+      result.length != 0 &&
+        <table>
+          <thead>
+            <th>
+              <td>レアリティ</td>
+              <td>名前</td>
+            </th>
+          </thead>
+          <tbody>
+            {result.map((res, _) => {
+              return <tr>
+                <td>{res.rank}</td>
+                <td>{res.name}</td>
+              </tr>
+            })}
+          </tbody>
+        </table>
+    }
+  </div>
 }
