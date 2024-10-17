@@ -10,7 +10,8 @@ func SetRouting(e *gin.Engine) {
 	indices := e.Group("/api")
 	gachas := indices.Group("/gacha")
 	{
-		gachas.GET("/:id", controllers.GetGacha)
-		gachas.GET("/:id/draw", controllers.DrawGacha)
+		gachas.GET("/", controllers.IndexGacha)
+		gachas.GET("/:type/:id", controllers.GetGacha)
+		gachas.GET("/:type/:id/draw", controllers.DrawGacha)
 	}
 }

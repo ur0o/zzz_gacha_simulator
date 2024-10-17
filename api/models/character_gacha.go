@@ -35,10 +35,13 @@ func GetCharacterGacha(id int) GachaMachine {
 
 func (g CharacterGacha)GetInfo() GachaInfo {
 	return GachaInfo{
+		ID: g.ID,
 		Name: g.Name,
 		PUS_name: g.PUS.Name,
 		PUA_name_0: g.PUA_0.Name,
 		PUA_name_1: g.PUA_1.Name,
+		StartDate: g.StartDate.Format("2006/01/02"),
+		EndDate: g.EndDate.Format("2006/01/02"),
 	}
 }
 

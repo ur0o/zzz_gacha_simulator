@@ -1,60 +1,52 @@
 import { BaseUrl } from "../utils/api_config";
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
-type GachaResult = {
+type GachaInfo = {
+  id: number,
   name: string,
-  rank: string,
+  puS: string,
+  puA_name_0: string,
+  puA_name_1: string,
+  startDate: string,
+  endDate: string
 }
 
 export function Home() {
-  const [text, setText] = useState("");
+  const [gachaList, setGachaList] = useState<GachaInfo[]>([]);
 
   useEffect(() => {
-    fetch();
+    fetchList();
   }, [])
 
-  function fetch() {
+  function fetchList() {
     const options: AxiosRequestConfig = {
       baseURL: BaseUrl,
-      url: `/gacha/1/draw`,
-      method: "get",
-      // params: gachastate
-      params: {
-        offsetS: 0,
-        offsetA: 0,
-        fixedS: false,
-        fixedA: false,
-        gacha_id: 1
-      }
+      url: `/gacha`,
+      method: "get"
     }
-    axios(options).then((res: AxiosResponse<GachaResult[]>) => {
+
+    axios(options).then((res: AxiosResponse<{results: GachaInfo[]}>) => {
       const { data } = res;
-      setResult(data)
-      setHistory(history.concat(result).slice(0, 90))
+      setGachaList(data.results);
     })
   }
 
-  return <div>
-    <button onClick={fetch}>ガチャる</button>
+
+  return <table>
+    <tbody>
     {
-      result.length != 0 &&
-        <table>
-          <thead>
-            <th>
-              <td>レアリティ</td>
-              <td>名前</td>
-            </th>
-          </thead>
-          <tbody>
-            {result.map((res, _) => {
-              return <tr>
-                <td>{res.rank}</td>
-                <td>{res.name}</td>
-              </tr>
-            })}
-          </tbody>
-        </table>
+      gachaList.map((i: GachaInfo) => {
+        return <tr>
+          <td><Link to={`/gacha/${i.id}`}>{i.name}</Link></td>
+          <td>{i.puS}</td>
+          <td>{i.puA_name_0}</td>
+          <td>{i.puA_name_1}</td>
+          <td>{`${i.startDate} ~ ${i.endDate}`}</td>
+        </tr>
+      })
     }
-  </div>
+    </tbody>
+  </table>
 }
