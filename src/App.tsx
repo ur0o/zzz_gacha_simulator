@@ -6,7 +6,9 @@ import { Gacha } from './pages/Gacha.tsx';
 
 export default function App() {
   const ContainerStyle = css`
-    max-width: 1080px;
+    width: 1080px;
+    margin: 0 auto;
+    padding: 16px;
   `;
 
   return <>
