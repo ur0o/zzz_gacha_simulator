@@ -119,7 +119,7 @@ func drawRank(offset4 uint, offset5 uint) string {
 	fmt.Println(random)
 	if random < rate5 {
 		return "S"
-	} else if (random + rate5) < rate4 {
+	} else if random < rate5 + rate4 {
 		return "A"
 	}
 	return "B"
