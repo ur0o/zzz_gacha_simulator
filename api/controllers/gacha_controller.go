@@ -36,19 +36,24 @@ func GetGacha(c *gin.Context) {
 	info := gacha_machine.GetInfo()
 	c.JSON(http.StatusOK, gin.H{
 		"name": info.Name,
-		"puS": info.PUS_name,
-		"puA_name_0": info.PUA_name_0,
-		"puA_name_1": info.PUA_name_1,
+		"puS_name": info.PUS_name,
+		"puSid": info.PUS_name,
+		"puA_0_name": info.PUA_name_0,
+		"puA_0_id": info.PUA_name_0,
+		"puA_1_name": info.PUA_name_1,
+		"puA_1_id": info.PUA_name_1,
+		"start_date": info.StartDate,
+		"end_date": info.EndDate,
 	})
 }
 
 func DrawGacha(c *gin.Context) {
 	// gacha_type := c.Param("type")
 	gacha_id, _ := strconv.Atoi(c.Param("id"))
-	oS, _ := strconv.Atoi(c.Param("offsetS"))
-	oA, _ := strconv.Atoi(c.Param("offsetA"))
-	fS, _ := strconv.ParseBool(c.Param("fixedS"))
-	fA, _ := strconv.ParseBool(c.Param("fixedA"))
+	oS, _ := strconv.Atoi(c.Query("offsetS"))
+	oA, _ := strconv.Atoi(c.Query("offsetA"))
+	fS, _ := strconv.ParseBool(c.Query("fixedS"))
+	fA, _ := strconv.ParseBool(c.Query("fixedA"))
 
 	var gacha_machine models.GachaMachine
 	if true {

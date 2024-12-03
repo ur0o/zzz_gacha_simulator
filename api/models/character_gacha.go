@@ -1,7 +1,6 @@
 package models
 
 import (
-	"fmt"
 	"math"
 	"math/rand"
 	"time"
@@ -45,66 +44,61 @@ func (g CharacterGacha)GetInfo() GachaInfo {
 	}
 }
 
-func (g CharacterGacha)Draw(num uint, offsetA uint, offsetS uint, fixedA bool, fixedS bool) []UnitInfo {
+func (g CharacterGacha)Draw(n uint, oS uint, oA uint, fS bool, fA bool) []UnitInfo {
 	// setup
-	var puA_characters []Character
-	var S_characters []Character
-	var A_characters []Character
-	var A_weapons	[]Weapon
-	var B_weapons []Weapon
+	var puAcs []Character
+	var Scs []Character
+	var Acs []Character
+	var Aws	[]Weapon
+	var Bws []Weapon
 
 	db := database.GetDB()
 	db.Preload("PUS").Find(&CharacterGacha{})
-	db.Where([]uint{g.PUA_0ID, g.PUA_1ID}).Find(&puA_characters)
-	db.Where(&Character{Rank: "S", IsLimited: false}).Not(g.PUS_ID).Find(&S_characters)
-	db.Where(&Character{Rank: "A", IsLimited: false}).Not([]uint{g.PUA_0ID, g.PUA_1ID}).Find(&A_characters)
-	db.Where(&Weapon{Rank: "A", IsLimited: false}).Find(&A_weapons)
-	db.Where(&Weapon{Rank: "B", IsLimited: false}).Find(&B_weapons)
-
-	fmt.Println(g.PUS_ID)
-	// fmt.Println(puA_characters)
-	// fmt.Println(S_characters)
-	// fmt.Println(A_characters)
+	db.Where([]uint{g.PUA_0ID, g.PUA_1ID}).Find(&puAcs)
+	db.Where(&Character{Rank: "S", IsLimited: false}).Not(g.PUS_ID).Find(&Scs)
+	db.Where(&Character{Rank: "A", IsLimited: false}).Not([]uint{g.PUA_0ID, g.PUA_1ID}).Find(&Acs)
+	db.Where(&Weapon{Rank: "A", IsLimited: false}).Find(&Aws)
+	db.Where(&Weapon{Rank: "B", IsLimited: false}).Find(&Bws)
 
 	// gacha
-	currentOffsetS := offsetS
-	currentOffsetA := offsetA
-	currentFixedS := fixedS
-	currentFixedA := fixedA
+	coS := oS
+	coA := oA
+	cfS := fS
+	cfA := fA
 	var results []UnitInfo
-	for i := 0; i < int(num); i++ {
-		rank := drawRank(currentOffsetA, currentOffsetS)
+	for i := 0; i < int(n); i++ {
+		rank := drawRank(coA, coS)
 		if rank == "S" {
-			currentOffsetS = 0
-			currentOffsetA = 0
-			if currentFixedS || drawPU() {
-				currentFixedS = false
+			coS = 0
+			coA = 0
+			if cfS || drawPU() {
+				cfS = false
 				results = append(results, g.PUS.GetUnitInfo())
 			} else {
-				currentFixedS = true
-				results = append(results, S_characters[rand.Intn(len(S_characters))].GetUnitInfo())
+				cfS = true
+				results = append(results, Scs[rand.Intn(len(Scs))].GetUnitInfo())
 			}
 		} else if rank == "A" {
-			currentOffsetS++
-			currentOffsetA = 0
-			if currentFixedA || drawPU() {
-				currentFixedA = false
-				results = append(results, puA_characters[rand.Intn(len(puA_characters))].GetUnitInfo())
+			coS++
+			coA = 0
+			if cfA || drawPU() {
+				cfA = false
+				results = append(results, puAcs[rand.Intn(len(puAcs))].GetUnitInfo())
 			} else {
-				currentFixedA = true
+				cfA = true
 				var c []Unit
-				for _, v := range A_characters {
+				for _, v := range Acs {
 					c = append(c, v)
 				}
-				for _, v := range A_weapons {
+				for _, v := range Aws {
 					c = append(c, v)
 				}
 				results = append(results, c[rand.Intn(len(c))].GetUnitInfo())
 			}
 		} else {
-			currentOffsetS++
-			currentOffsetA++
-			results = append(results, B_weapons[rand.Intn(len(B_weapons))].GetUnitInfo())
+			coS++
+			coA++
+			results = append(results, Bws[rand.Intn(len(Bws))].GetUnitInfo())
 		}
 	}
 
@@ -116,7 +110,6 @@ func drawRank(offset4 uint, offset5 uint) string {
 	rate4 := math.Max(float64(offset4) + 1 - 8.0, 0) * 51 + 5.1
 
 	random := float64(rand.Intn(1000)) / 10
-	fmt.Println(random)
 	if random < rate5 {
 		return "S"
 	} else if random < rate5 + rate4 {
@@ -126,18 +119,18 @@ func drawRank(offset4 uint, offset5 uint) string {
 }
 
 func fetchCandidate(rank string) []Unit {
-	var characters []Character
-	var weapons 	 []Weapon
+	var cs []Character
+	var ws []Weapon
 
 	db := database.GetDB()
-	db.Where(&Character{Rank: rank}).Find(&characters)
-	db.Where(&Weapon{Rank: rank}).Find(&weapons)
+	db.Where(&Character{Rank: rank}).Find(&cs)
+	db.Where(&Weapon{Rank: rank}).Find(&ws)
 
 	var candidates []Unit
-	for _, c := range(characters) {
+	for _, c := range(cs) {
 		candidates = append(candidates, c)
 	}
-	for _, w := range(weapons) {
+	for _, w := range(ws) {
 		candidates = append(candidates, w)
 	}
 	return candidates
